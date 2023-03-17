@@ -6,13 +6,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const getStarWarPeople = async () => {
-      const starWarsAPI = await fetch("https://swapi.dev/api/people/1");
+      const starWarsAPI = await fetch("https://swapi.dev/api/people");
       const response = await starWarsAPI.json();
-      console.log(
-        "🚀 ~ file: App.tsx:11 ~ getStarWarPeople ~ response:",
-        response.name
-      );
-      setPeopleName(response.name);
+      setPeopleName(response.results[0].name);
     };
     getStarWarPeople();
   }, []);
