@@ -22,8 +22,31 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("renders learn react link", async () => {
+test("initialised app with firstname correctly", async () => {
   render(<App />);
   const linkElement = await screen.findByText("First Person");
+  expect(linkElement).toBeInTheDocument();
+});
+
+test("if the API returns Status Code 500 display errormessage Oops... something went wrong, try again 🤕", async () => {
+  server.use(
+    rest.get("https://swapi.dev/api/people", (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+  render(<App />);
+  const linkElement = await screen.findByText(
+    "Oops... something went wrong, try again 🤕"
+  );
+  expect(linkElement).toBeInTheDocument();
+});
+test("if the API returns Status Code 418 display errormessage I'm a tea pot 🫖, silly", async () => {
+  server.use(
+    rest.get("https://swapi.dev/api/people", (req, res, ctx) => {
+      return res(ctx.status(418));
+    })
+  );
+  render(<App />);
+  const linkElement = await screen.findByText("I'm a tea pot 🫖, silly");
   expect(linkElement).toBeInTheDocument();
 });
